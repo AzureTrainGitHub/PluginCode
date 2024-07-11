@@ -51,7 +51,7 @@ namespace KSA.CRM.Plugins
             Guid contactId = organizationService.Create(contact);
         }
 
-        //Generic
+        //Create Record
         public void CreateRecord(string currencyfield,string booleanfield,bool booleanvalue,string entityname,string optionsetfield,int optionsetvalue, string txtfield, string txtvalue,string intfield, int intvalue, string targetEntityName,Guid targetEntityID, IOrganizationService organizationService)
         {
             Entity entityobj = new Entity(entityname);
@@ -69,6 +69,21 @@ namespace KSA.CRM.Plugins
             entityobj[currencyfield]= currencyId;
             Guid entityobjId = organizationService.Create(entityobj);
         }
+	//Retrieve 
+	public void RetrieveRecordByID(string entityname,Guid entityguid, IOrganizationService organizationService)
+        {
+            
+             Entity entityRecord = organizationService.Retrieve(entityname, entityguid, new ColumnSet(true));
+            return entityRecord;
+        }
+	//Delete 
+	public void DeleteRecordByID(string entityname,Guid entityguid, IOrganizationService organizationService)
+        {
+            
+             Entity entityRecord = organizationService.Delete(entityname, entityguid);
+            
+        }
+	
         //Gainwell Code
 
         /// <summary>

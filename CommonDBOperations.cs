@@ -29,6 +29,47 @@ namespace KSA.CRM.Plugins
             };
             organizationService.Execute(req);
         }
+        //Gainwell Code
+/// <summary>
+        /// Create Record
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="targetEntityID"></param>
+        /// <param name="targetEntityName"></param>
+        /// <param name="subject"></param>
+        /// <param name="category"></param>
+        /// <param name="status"></param>
+        /// <param name="organizationService"></param>
+        public void CreateContactRecord(int country, int state, string name, int age, int gender, IOrganizationService organizationService)
+        {
+            Entity contact = new Entity("contact");
+            contact["firstname"] = name;
+            contact["gendercode"] = new OptionSetValue(gender);//new EntityReference(targetEntityName, targetEntityID);
+            contact["numberofchildren"] = age;
+            contact["country"] = new OptionSetValue(country);
+            contact["state"] =  new OptionSetValue(state);
+            Guid contactId = organizationService.Create(contact);
+        }
+
+        //Generic
+        public void CreateRecord(string currencyfield,string booleanfield,bool booleanvalue,string entityname,string optionsetfield,int optionsetvalue, string txtfield, string txtvalue,string intfield, int intvalue, string targetEntityName,Guid targetEntityID, IOrganizationService organizationService)
+        {
+            Entity entityobj = new Entity(entityname);
+            entityobj[txtfield] = txtvalue;
+            entityobj[optionsetfield] = new OptionSetValue(optionsetvalue);
+            //entityobj[dependantoptionsetfield] = new OptionSetValue(dependantoptionsetvalue);
+            entityobj[intfield] = intvalue;
+            entityobj[lookupfield] =new EntityReference(targetEntityName, targetEntityID);
+            entityobj[booleanfield] =  booleanvalue;
+            //currency default to base currency
+             var query = new QueryExpression("organization");
+		        query.ColumnSet = new ColumnSet("basecurrencyid");
+		        var result = _serviceProxy.RetrieveMultiple(query);
+		        var currencyId = (EntityReference)result.Entities[0]["basecurrencyid"];
+            entityobj[currencyfield]= currencyId;
+            Guid entityobjId = organizationService.Create(entityobj);
+        }
+        //Gainwell Code
 
         /// <summary>
         /// Create Task On Assignment
